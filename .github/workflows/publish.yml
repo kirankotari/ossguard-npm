@@ -1,0 +1,115 @@
+name: Publish to npm
+
+on:
+  repository_dispatch:
+    types: [publish-npm]
+
+permissions: read-all
+
+jobs:
+  download-binaries:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - artifact: ossguard-linux-amd64
+            pkg: cli-linux-x64
+            bin: ossguard
+          - artifact: ossguard-linux-arm64
+            pkg: cli-linux-arm64
+            bin: ossguard
+          - artifact: ossguard-macos-x64
+            pkg: cli-darwin-x64
+            bin: ossguard
+          - artifact: ossguard-macos-arm64
+            pkg: cli-darwin-arm64
+            bin: ossguard
+          - artifact: ossguard-windows-amd64.exe
+            pkg: cli-win32-x64
+            bin: ossguard.exe
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Download binary from ossguard release
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          URL="https://github.com/kirankotari/ossguard/releases/download/v${VERSION}/${{ matrix.artifact }}"
+          mkdir -p packages/${{ matrix.pkg }}/bin
+          curl -fsSL "$URL" -o "packages/${{ matrix.pkg }}/bin/${{ matrix.bin }}"
+          chmod +x "packages/${{ matrix.pkg }}/bin/${{ matrix.bin }}"
+
+      - name: Upload prepared package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: npm-${{ matrix.pkg }}
+          path: packages/${{ matrix.pkg }}/
+
+  publish-platform:
+    needs: download-binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pkg:
+          - cli-linux-x64
+          - cli-linux-arm64
+          - cli-darwin-x64
+          - cli-darwin-arm64
+          - cli-win32-x64
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@49933ea5288caeca8642195f82ba3230a0e46116 # v4.4.0
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Download prepared package
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: npm-${{ matrix.pkg }}
+          path: packages/${{ matrix.pkg }}/
+
+      - name: Publish platform package
+        working-directory: packages/${{ matrix.pkg }}
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-main:
+    needs: publish-platform
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@49933ea5288caeca8642195f82ba3230a0e46116 # v4.4.0
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish main package
+        working-directory: packages/ossguard
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          node -e "
+            const pkg = require('./package.json');
+            for (const k of Object.keys(pkg.optionalDependencies)) {
+              pkg.optionalDependencies[k] = '$VERSION';
+            }
+            require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          cp ../../LICENSE .
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
