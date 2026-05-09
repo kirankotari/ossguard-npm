@@ -47,7 +47,6 @@
     "ora": "^8.1.0"
   },
   "devDependencies": {
-    "@types/cli-table3": "^0.6.5",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.0.0",
     "eslint": "^9.0.0",
