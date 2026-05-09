@@ -1,8 +1,13 @@
-# ossguard
+# OSSGuard — Node.js Implementation
 
-> One CLI to guard any OSS project with OpenSSF security best practices — bootstrap, scan, and monitor.
+**The TypeScript/Node.js implementation of [OSSGuard](https://github.com/kirankotari/ossguard).**
 
-Native TypeScript implementation — no Python required, runs on Node.js 18+.
+[![npm](https://img.shields.io/npm/v/ossguard)](https://www.npmjs.com/package/ossguard)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
+Native TypeScript implementation — runs on Node.js 18+, zero-install via `npx`.
+
+> For full documentation, all install methods, and command examples, see the main [ossguard](https://github.com/kirankotari/ossguard) repo.
 
 ## Install
 
@@ -77,25 +82,24 @@ src/
 └── index.ts         # Public API exports
 ```
 
+## Other Implementations
+
+| Implementation | Install | Best for |
+|---------------|---------|----------|
+| **[ossguard-python](https://github.com/kirankotari/ossguard-python)** | `pip install ossguard` | Rich UI, developer workstation |
+| **[ossguard-go](https://github.com/kirankotari/ossguard-go)** | `brew install kirankotari/tap/ossguard` | CI pipelines, single binary |
+
 ## Development
 
 ```bash
-# Install dependencies
+git clone https://github.com/kirankotari/ossguard-npm.git
+cd ossguard-npm
 npm install
-
-# Build
 npm run build
-
-# Run tests
 npm test
-
-# Type check
 npm run typecheck
-
-# Watch mode
-npm run dev
 ```
 
 ## License
 
-Apache-2.0
+Apache-2.0 — see [LICENSE](LICENSE) for details.
