@@ -2,7 +2,7 @@
  * ossguard: One-command CLI to guard OSS projects with OpenSSF security best practices.
  */
 
-export const VERSION = "0.1.4-alpha.2";
+export const VERSION = "0.1.4";
 
 export { detectProject, type ProjectInfo } from "./detector.js";
 export { parseDependencies, type Dependency } from "./parsers/dependencies.js";
