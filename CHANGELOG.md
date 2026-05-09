@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-05-09
+
+### Changed
+
+- README updated for multi-repo structure, links to main [ossguard](https://github.com/kirankotari/ossguard) docs repo
+- Added "Other Implementations" section to README
+
+### Fixed
+
+- Removed `npm test` step from publish workflow (no test files yet)
+- Fixed CLI entry point with correct generator function calls
+
 ## [0.1.0] - 2026-05-08
 
 ### Added
