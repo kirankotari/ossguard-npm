@@ -1,6 +1,8 @@
-# ossguard-npm
+# ossguard
 
-> npm distribution packages for [ossguard](https://github.com/kirankotari/ossguard) — pre-built binaries, no Python required.
+> One CLI to guard any OSS project with OpenSSF security best practices — bootstrap, scan, and monitor.
+
+Native TypeScript implementation — no Python required, runs on Node.js 18+.
 
 ## Install
 
@@ -8,27 +10,91 @@
 npm install -g ossguard
 ```
 
-npm automatically installs only the pre-built binary for your platform.
+## Quick Start
 
-## Packages
+```bash
+# Initialize security configs (SECURITY.md, Scorecard, Dependabot, CodeQL, SBOM, Sigstore)
+ossguard init
 
-| Package | Platform |
-|---------|----------|
-| [`ossguard`](packages/ossguard/) | Main CLI wrapper (all platforms) |
-| [`@ossguard/cli-linux-x64`](packages/cli-linux-x64/) | Linux x64 |
-| [`@ossguard/cli-linux-arm64`](packages/cli-linux-arm64/) | Linux arm64 |
-| [`@ossguard/cli-darwin-x64`](packages/cli-darwin-x64/) | macOS Intel |
-| [`@ossguard/cli-darwin-arm64`](packages/cli-darwin-arm64/) | macOS Apple Silicon |
-| [`@ossguard/cli-win32-x64`](packages/cli-win32-x64/) | Windows x64 |
+# Run a full security audit
+ossguard audit
 
-Uses the same platform-specific `optionalDependencies` pattern as esbuild, Biome, and Turbo.
+# Scan for leaked secrets
+ossguard secrets
 
-## How releases work
+# Check OSPS Baseline compliance
+ossguard baseline
 
-1. A new version is tagged in [kirankotari/ossguard](https://github.com/kirankotari/ossguard)
-2. The binaries workflow builds standalone executables for all platforms
-3. A `repository_dispatch` event triggers this repo's publish workflow
-4. Platform packages are published first, then the main `ossguard` package
+# Pin GitHub Actions to commit SHAs
+ossguard pin --apply
+```
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `init` | Bootstrap security configs for a project |
+| `scan` | Quick scan for security configuration |
+| `version` | Show version |
+| **Dependencies** | |
+| `deps` | Analyze dependency health and vulnerabilities |
+| `drift` | Detect dependency drift from lock files |
+| `watch` | Monitor dependencies for new vulnerabilities |
+| `tpn` | Generate third-party notices |
+| `reach` | Reachability-filtered vulnerability analysis |
+| **Audit & Fix** | |
+| `audit` | Comprehensive security audit (config + deps + reach) |
+| `fix` | Auto-remediate common security issues |
+| `badge` | OpenSSF Best Practices Badge readiness |
+| `ci` | Generate unified security CI pipeline |
+| `report` | Export HTML/JSON compliance reports |
+| `policy` | Organization-wide security policy enforcement |
+| `license` | License compliance checking |
+| **Advanced** | |
+| `baseline` | OSPS Baseline compliance (Levels 1–3) |
+| `insights` | Generate/validate SECURITY-INSIGHTS.yml |
+| `pin` | Pin GitHub Actions to commit SHAs |
+| `secrets` | Scan for leaked credentials and secrets |
+| `slsa` | SLSA provenance level assessment |
+| `sbom-gen` | Generate SPDX or CycloneDX SBOMs |
+| `supply-chain` | Malicious package and typosquatting detection |
+| `container` | Dockerfile security linting |
+| `compare` | Compare security posture of two projects |
+| `update` | Security-prioritized dependency updates |
+| `maturity` | S2C2F maturity assessment |
+| `fuzz` | Fuzzing readiness check and starter harness generation |
+
+## Project Structure
+
+```
+src/
+├── analyzers/       # 24 security analyzers
+├── apis/            # OSV and deps.dev API clients
+├── detector.ts      # Project detection and metadata
+├── generators/      # Config file generators (security-md, scorecard, etc.)
+├── parsers/         # Dependency and SBOM parsers
+├── ui.ts            # Terminal output helpers
+└── index.ts         # Public API exports
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Run tests
+npm test
+
+# Type check
+npm run typecheck
+
+# Watch mode
+npm run dev
+```
 
 ## License
 
