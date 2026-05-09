@@ -1,0 +1,58 @@
+{
+  "name": "ossguard",
+  "version": "0.1.0",
+  "description": "One CLI to guard any OSS project with OpenSSF security best practices — bootstrap, scan, and monitor.",
+  "type": "module",
+  "bin": {
+    "ossguard": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "openssf",
+    "security",
+    "scorecard",
+    "sbom",
+    "supply-chain",
+    "vulnerabilities",
+    "cli"
+  ],
+  "author": "Kiran K Kotari <kirankotari@live.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kirankotari/ossguard-npm.git"
+  },
+  "homepage": "https://github.com/kirankotari/ossguard",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "cli-table3": "^0.6.5",
+    "commander": "^12.1.0",
+    "js-yaml": "^4.1.0",
+    "ora": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/cli-table3": "^0.6.5",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
