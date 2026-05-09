@@ -1,6 +1,6 @@
 {
   "name": "ossguard",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "One CLI to guard any OSS project with OpenSSF security best practices — bootstrap, scan, and monitor.",
   "type": "module",
   "bin": {
